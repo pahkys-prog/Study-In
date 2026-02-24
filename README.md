@@ -9,7 +9,7 @@
 
 - **프로젝트명**: Study-In
 - **개발 기간**: 2026.02.24 ~ 2026.03.13
-- **개발 인원**: Front-End64l 6명 (Team Project)
+- **개발 인원**: Front-End 6기 6명 (Team Project)
 - **배포 주소**:
 - **Test Account**
 
