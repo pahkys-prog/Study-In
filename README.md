@@ -10,7 +10,7 @@
 - **프로젝트명**: Study-In-03
 - **개발 기간**: 2026.02.24 ~ 2026.03.13
 - **개발 인원**: Front-End 6기 6명 (Team Project)
-- **협업 gitHub 주소**: https://github.com/Study-In-03/Study-In.git
+- **배포주소**:
 - **Test Account**
 
   
@@ -60,13 +60,11 @@ gantt
 
 ---
 
-## 3. 프로젝트 샐행 방법
+## 3. 프로젝트 실행 방법
 
   ### 1. 저장소 클론
   
-    VITE_BASE_URL=https://api.studyin.com :
-    VITE_CHAT_URL=wss://api.studyin.com/ws :
-git clone <[repository-url](https://github.com/Study-In-03/Study-In.git)>
+git clone https://github.com/Study-In-03/Study-In.git
 
  ### 2. 패키지 설치
   npm install
@@ -74,7 +72,9 @@ git clone <[repository-url](https://github.com/Study-In-03/Study-In.git)>
   ### 3. 환경 변수 설정
   .env 파일 생성 후 아래 내용 추가
 
-
+    VITE_BASE_URL=https://api.studyin.com :
+    VITE_CHAT_URL=wss://api.studyin.com/ws :
+    
   ### 4. 실행
   npm run dev
 
@@ -131,37 +131,6 @@ end
     폼 상태	커스텀 훅
     서버 데이터	API 호출 기반
 
-## 5-1. 페이지 구조 (Page Structure)
-
-이 프로젝트는 React + React Router DOM + Vite를 기반으로 한 **SPA(sigle Page Application)** 구조로 설계되었습니다.
-index.html (단 하나) 파일 안에서 <div id="root"></div> 여기에 React가 모든 화면을 렌더링합니다. 따라서, 상태 기반으로 rendering이 가능하도록 각각의 상황에 맞는 component들을 구성하였습니다.
-
-| 페이지          | 파일 경로 (URL Path)                       | 설명                            | 접근 권한 |
-| :-------------- | :----------------------------------------- | :------------------------------ | :-------- |
-| **메인**        | `/`                                        | 상품 목록 및 배너               | All       |
-
-
-
----
-
-## 5. 기능 시연 (Preview)
-
-서비스의 핵심 기능을 **GIF**로 확인하실 수 있습니다.(발표용 PPR자료에서는 움짤+설명, 추가기능에대해서는 다른색으로 설명추가예정)
-
-### 5-1. 메인 페이지 (Main Page)
-각 페이지에 대한 설명
-</>
-<br/>
-(예)
-**메인 상품 목록 및 배너**
- 슬라이드 배너와 상품 목록을 조회하고, 상품을 눌러 상세페이지로 이동합니다.
-      
-      <div align="center">
-        <img src="./docs/메인페이지.gif" width="800" alt="메인 페이지">
-        <br/>
-      </div>
-
----
 
 ## 6. 주요 기능 (Key Features)
 
@@ -240,26 +209,18 @@ index.html (단 하나) 파일 안에서 <div id="root"></div> 여기에 React�
 
 ---
 
-## 7. 폴더 구조 (Directory Structure)
+## 7. 기능 시연 (Preview) 및 역할 분담
 
-```mermade
- studyin-frontend
-├── public/
-├── src/
-│   ├── api/          # 서버 통신 로직 (Axios 인스턴스, API 함수)
-│   ├── components/   # 전역 공통 UI 컴포넌트
-│   ├── features/     # 도메인별 기능 모듈 (auth, study, profile 등)
-│   ├── hooks/        # 전역 커스텀 훅
-│   ├── pages/        # 라우팅과 연결되는 실제 페이지
-│   ├── routes/       # Public/Private 라우트 설정
-│   ├── store/        # Zustand 전역 상태 관리
-│   ├── types/        # TypeScript 타입 정의
-│   ├── utils/        # 유틸 함수 모음
-│   ├── lib/          # 외부 라이브러리 초기화
-│   ├── App.tsx
-│   └── main.tsx
-end
-```
+서비스의 핵심 기능을 **GIF**로 확인하실 수 있습니다.(발표용 PPR자료에서는 움짤+설명, 추가기능에대해서는 다른색으로 설명추가예정)
+
+(예)### 7-1-1. 메인 페이지 (Main Page)
+각 페이지에 대한 설명
+</>
+<br/>
+
+---
+
+
 ### 7-1. 역할 분담
 | 이름 | 담당 영역           |
 | -- | --------------- |
