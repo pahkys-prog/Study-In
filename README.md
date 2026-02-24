@@ -62,19 +62,19 @@ gantt
 
 ## 3. 프로젝트 샐행 방법
 
-  ### 1. 저장소 클론
-  git clone <repository-url>
+  ###$. 저장소 클론
+    VITE_BASE_URL=https://api.studyin.com
+    VITE_CHAT_URL=wss://api.studyin.com/ws
+git clone <repository-url>
 
- ### 2. 패키지 설치
+ ### $. 패키지 설치
   npm install
 
-  ### 3. 환경 변수 설정
+  ### $. 환경 변수 설정
   .env 파일 생성 후 아래 내용 추가
 
-  VITE_BASE_URL=https://api.studyin.com
-  VITE_CHAT_URL=wss://api.studyin.com/ws
 
-  ### 4. 실행
+  ### $. 실행
   npm run dev
 
 ## 4. 프로젝트 구조
@@ -111,9 +111,10 @@ features/
 end
 ```
 
-👉 장점: 기능별 응집도 ↑, 유지보수 용이, 팀원 분업이 명확
+ 장점: 기능별 응집도 ↑, 유지보수 용이, 팀원 분업이 명확
 
  2. API 레이어 분리 : Axios 인스턴스 분리, 인터셉터에서 JWT 자동 주입, 401 발생 시 refresh_token 자동 갱신
+    
 ```mermade
 api/
  ├── axios.ts 
