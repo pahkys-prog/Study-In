@@ -3,6 +3,7 @@ import type { ChangeEvent, KeyboardEvent, FormEvent, RefObject } from "react";
 import iconImage from "@/assets/base/icon-Image.svg";
 import iconLocation from "@/assets/base/icon-location.svg";
 import iconClock from "@/assets/base/icon-clock.svg";
+import iconCalendar from "@/assets/base/icon-Calendar.svg";
 import type { StudyFormState, StudyFormErrors, StudyDay } from "@/types/study";
 
 const DAYS: StudyDay[] = ["월", "화", "수", "목", "금", "토", "일"];
@@ -90,6 +91,80 @@ interface StudyFormProps {
   handleReset: () => void;
   // 프로필에서 인증된 지역 — 추후 API 연결 시 실제 값으로 주입
   userLocation?: string;
+}
+
+function SelectPicker({
+  value,
+  onChange,
+  options,
+  placeholder,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
+  placeholder: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <div ref={containerRef} className="relative w-full">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className={`w-full flex items-center justify-between h-10 bg-white border rounded-lg pl-[14px] pr-[10px] transition-colors ${
+          open ? "border-[#4F7BF7]" : "border-gray-300"
+        }`}
+      >
+        <span className={`text-[14px] font-normal ${value ? "text-gray-900" : "text-gray-500"}`}>
+          {value || placeholder}
+        </span>
+        <svg
+          className={`w-4 h-4 shrink-0 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="absolute top-full left-0 mt-1 z-20 w-full bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
+          <div className="max-h-48 overflow-y-auto">
+            {options.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  onChange(opt);
+                  setOpen(false);
+                }}
+                className={`w-full px-[14px] py-2.5 text-[14px] text-left transition-colors ${
+                  opt === value
+                    ? "bg-[#4F7BF7] text-white"
+                    : "text-gray-900 hover:bg-gray-50"
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function TimePicker({
@@ -186,7 +261,6 @@ export default function StudyForm({
   updateField,
   handleThumbnailChange,
   handleDayToggle,
-  handleAddTag,
   handleAddTagDirect,
   handleRemoveTag,
   handleTagInputKeyDown,
@@ -194,6 +268,19 @@ export default function StudyForm({
   userLocation,
 }: StudyFormProps) {
   const [isTagFocused, setIsTagFocused] = useState(false);
+  const [isDateOpen, setIsDateOpen] = useState(false);
+  const dateInputRef = useRef<HTMLInputElement>(null);
+  const dateContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dateContainerRef.current && !dateContainerRef.current.contains(e.target as Node)) {
+        setIsDateOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   const filteredTagOptions = TAG_OPTIONS.filter(
     (t) =>
@@ -354,7 +441,7 @@ export default function StudyForm({
         {/* 스터디 소개 */}
         <div>
           <label className="block text-lg font-medium text-gray-700 mb-2">
-            스터디 소개 <span className="text-red-500">*</span>
+            스터디 소개
           </label>
           <textarea
             maxLength={MAX_INTRO}
@@ -421,12 +508,29 @@ export default function StudyForm({
             스터디 시작일 <span className="text-red-500">*</span>
           </span>
           <div className="flex-1">
-            <input
-              type="date"
-              value={form.startDate}
-              onChange={(e) => updateField("startDate", e.target.value)}
-              className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors"
-            />
+            <div ref={dateContainerRef} className="relative w-full">
+              {/* 보이는 표시 — 클릭 시 showPicker() 호출 */}
+              <div
+                className={`w-full h-10 bg-white border rounded-lg pl-[14px] pr-[10px] text-[14px] flex items-center justify-between cursor-pointer transition-colors ${isDateOpen ? "border-[#4F7BF7]" : "border-gray-200"}`}
+                onClick={() => {
+                  setIsDateOpen(true);
+                  (dateInputRef.current as HTMLInputElement & { showPicker?: () => void })?.showPicker?.();
+                }}
+              >
+                <span className={form.startDate ? "text-gray-900" : "text-gray-500"}>
+                  {form.startDate || "YYYY-MM-DD"}
+                </span>
+                <img src={iconCalendar} alt="" className="w-5 h-5 shrink-0" />
+              </div>
+              {/* 숨겨진 네이티브 피커 */}
+              <input
+                ref={dateInputRef}
+                type="date"
+                value={form.startDate}
+                onChange={(e) => { updateField("startDate", e.target.value); setIsDateOpen(false); }}
+                className="absolute opacity-0 pointer-events-none w-0 h-0"
+              />
+            </div>
             {errors.startDate && (
               <p className="mt-1 text-xs text-red-500">{errors.startDate}</p>
             )}
@@ -439,33 +543,12 @@ export default function StudyForm({
             스터디 기간 <span className="text-red-500">*</span>
           </span>
           <div className="flex-1">
-            <div className="relative">
-              <select
-                value={form.durationWeeks}
-                onChange={(e) => updateField("durationWeeks", e.target.value)}
-                className="w-full appearance-none bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors text-gray-700"
-              >
-                <option value="">스터디 기간 선택</option>
-                {DURATIONS.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-              <svg
-                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
+            <SelectPicker
+              value={form.durationWeeks}
+              onChange={(v) => updateField("durationWeeks", v)}
+              options={DURATIONS}
+              placeholder="스터디 기간 선택"
+            />
             {errors.durationWeeks && (
               <p className="mt-1 text-xs text-red-500">{errors.durationWeeks}</p>
             )}
@@ -522,7 +605,7 @@ export default function StudyForm({
                 className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   form.subject === s
                     ? "bg-[#4F7BF7] border-[#4F7BF7] text-white"
-                    : "bg-white border-gray-300 text-gray-600"
+                    : "bg-gray-100 border-gray-100 text-gray-700"
                 }`}
               >
                 {s}
@@ -545,10 +628,10 @@ export default function StudyForm({
                 key={value}
                 type="button"
                 onClick={() => updateField("difficulty", value)}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${
+                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   form.difficulty === value
                     ? "bg-[#4F7BF7] border-[#4F7BF7] text-white"
-                    : "bg-white border-gray-300 text-gray-600"
+                    : "bg-gray-100 border-gray-100 text-gray-700"
                 }`}
               >
                 {label}
@@ -563,13 +646,13 @@ export default function StudyForm({
         {/* 검색 태그 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            검색 태그
+            검색 태그 <span className="text-red-500">*</span>
             <span className="ml-1.5 text-xs text-gray-400 font-normal">
               ({form.tags.length}/{MAX_TAGS})
             </span>
           </label>
           <div className="relative">
-            <div className="flex gap-2">
+            <div>
               <input
                 type="text"
                 value={tagInput}
@@ -577,21 +660,13 @@ export default function StudyForm({
                 onKeyDown={handleTagInputKeyDown}
                 onFocus={() => setIsTagFocused(true)}
                 onBlur={() => setIsTagFocused(false)}
-                placeholder="태그 검색 또는 직접 입력"
+                placeholder="태그 입력 (최대5개)"
                 disabled={form.tags.length >= MAX_TAGS}
-                className="flex-1 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors disabled:bg-gray-50 disabled:text-gray-400"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors disabled:bg-gray-50 disabled:text-gray-400"
               />
-              <button
-                type="button"
-                onClick={handleAddTag}
-                disabled={form.tags.length >= MAX_TAGS}
-                className="px-4 py-2.5 rounded-lg bg-[#4F7BF7] text-white text-sm font-medium hover:bg-[#3d68e0] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                추가
-              </button>
             </div>
             {showTagDropdown && (
-              <ul className="absolute z-10 left-0 right-[4.5rem] mt-1 bg-white border border-gray-200 rounded-lg shadow-md max-h-48 overflow-y-auto">
+              <ul className="absolute z-10 left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-md max-h-48 overflow-y-auto">
                 {filteredTagOptions.map((option) => (
                   <li
                     key={option}
