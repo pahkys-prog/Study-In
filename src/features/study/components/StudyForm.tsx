@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { ChangeEvent, KeyboardEvent, FormEvent, RefObject } from "react";
 import iconImage from "@/assets/base/icon-Image.svg";
 import iconLocation from "@/assets/base/icon-location.svg";
+import iconClock from "@/assets/base/icon-clock.svg";
 import type { StudyFormState, StudyFormErrors, StudyDay } from "@/types/study";
 
 const DAYS: StudyDay[] = ["월", "화", "수", "목", "금", "토", "일"];
@@ -89,6 +90,91 @@ interface StudyFormProps {
   handleReset: () => void;
   // 프로필에서 인증된 지역 — 추후 API 연결 시 실제 값으로 주입
   userLocation?: string;
+}
+
+function TimePicker({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [hh, mm] = (value || "00:00").split(":");
+  const hour = (hh ?? "00").padStart(2, "0");
+  const minute = (mm ?? "00").padStart(2, "0");
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <div ref={containerRef} className="relative flex-1 min-w-0">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className={`w-full flex items-center justify-between h-10 bg-white border rounded-lg pl-[14px] pr-[10px] transition-colors ${
+          open ? "border-[#4F7BF7]" : "border-gray-300"
+        }`}
+      >
+        <span className="text-[14px] font-normal text-gray-900">{hour} : {minute}</span>
+        <img src={iconClock} alt="" className="w-5 h-5 shrink-0" />
+      </button>
+
+      {open && (
+        <div className="absolute top-full left-0 mt-1 z-20 bg-white border border-gray-200 rounded-lg shadow-md flex overflow-hidden w-full">
+          {/* 시 */}
+          <div className="flex-1 h-44 overflow-y-auto">
+            {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0")).map((hv) => (
+              <button
+                key={hv}
+                type="button"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  onChange(`${hv}:${minute}`);
+                }}
+                className={`w-full py-2 text-sm text-center transition-colors ${
+                  hv === hour
+                    ? "bg-[#4F7BF7] text-white"
+                    : "text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                {hv}
+              </button>
+            ))}
+          </div>
+          <div className="w-px bg-gray-100 shrink-0" />
+          {/* 분 */}
+          <div className="flex-1 h-44 overflow-y-auto">
+            {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0")).map((mv) => (
+              <button
+                key={mv}
+                type="button"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  onChange(`${hour}:${mv}`);
+                }}
+                className={`w-full py-2 text-sm text-center transition-colors ${
+                  mv === minute
+                    ? "bg-[#4F7BF7] text-white"
+                    : "text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                {mv}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function StudyForm({
@@ -393,18 +479,14 @@ export default function StudyForm({
           </span>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <input
-                type="time"
+              <TimePicker
                 value={form.startTime}
-                onChange={(e) => updateField("startTime", e.target.value)}
-                className="flex-1 min-w-0 min-h-[40px] bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors"
+                onChange={(v) => updateField("startTime", v)}
               />
               <span className="text-gray-400 text-sm shrink-0">~</span>
-              <input
-                type="time"
+              <TimePicker
                 value={form.endTime}
-                onChange={(e) => updateField("endTime", e.target.value)}
-                className="flex-1 min-w-0 min-h-[40px] bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors"
+                onChange={(v) => updateField("endTime", v)}
               />
             </div>
             {errors.startTime && (
