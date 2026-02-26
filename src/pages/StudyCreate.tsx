@@ -21,6 +21,7 @@ export default function StudyCreate() {
     handleThumbnailChange,
     handleDayToggle,
     handleAddTag,
+    handleAddTagDirect,
     handleRemoveTag,
     handleTagInputKeyDown,
     handleSubmit: onSubmit,
@@ -79,6 +80,7 @@ export default function StudyCreate() {
           handleThumbnailChange={handleThumbnailChange}
           handleDayToggle={handleDayToggle}
           handleAddTag={handleAddTag}
+          handleAddTagDirect={handleAddTagDirect}
           handleRemoveTag={handleRemoveTag}
           handleTagInputKeyDown={handleTagInputKeyDown}
           handleSubmit={onSubmit}

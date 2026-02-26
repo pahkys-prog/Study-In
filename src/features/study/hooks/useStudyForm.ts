@@ -28,6 +28,8 @@ function validateForm(state: StudyFormState): StudyFormErrors {
   if (!state.thumbnail) errors.thumbnail = "썸네일 이미지를 업로드해주세요.";
   if (!state.title.trim()) errors.title = "스터디 제목을 입력해주세요.";
   if (!state.studyType) errors.studyType = "스터디 유형을 선택해주세요.";
+  if (state.studyType === "offline" && !state.location)
+    errors.location = "지역을 선택해주세요.";
   if (state.maxMembers === "") {
     errors.maxMembers = "모집 인원을 입력해주세요.";
   } else if (Number(state.maxMembers) < 3 || Number(state.maxMembers) > 99) {
@@ -51,6 +53,7 @@ function isFormValid(state: StudyFormState): boolean {
   if (!state.thumbnail) return false;
   if (!state.title.trim()) return false;
   if (!state.studyType) return false;
+  if (state.studyType === "offline" && !state.location) return false;
   if (
     state.maxMembers === "" ||
     Number(state.maxMembers) < 3 ||
@@ -165,6 +168,24 @@ export function useStudyForm(onSubmit?: (state: StudyFormState) => void) {
     setIsDirty(true);
   }, [tagInput, form.tags]);
 
+  const handleAddTagDirect = useCallback((tag: string) => {
+    const trimmed = tag.trim();
+    if (!trimmed) return;
+    if (form.tags.includes(trimmed)) return;
+    if (form.tags.length >= 5) return;
+    setForm((prev: StudyFormState) => ({
+      ...prev,
+      tags: [...prev.tags, trimmed],
+    }));
+    setTagInput("");
+    setErrors((prev: StudyFormErrors) => {
+      const next = { ...prev };
+      delete next.tags;
+      return next;
+    });
+    setIsDirty(true);
+  }, [form.tags]);
+
   const handleRemoveTag = useCallback((tag: string) => {
     setForm((prev: StudyFormState) => ({
       ...prev,
@@ -218,6 +239,7 @@ export function useStudyForm(onSubmit?: (state: StudyFormState) => void) {
     handleThumbnailChange,
     handleDayToggle,
     handleAddTag,
+    handleAddTagDirect,
     handleRemoveTag,
     handleTagInputKeyDown,
     handleSubmit,

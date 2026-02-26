@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { ChangeEvent, KeyboardEvent, FormEvent, RefObject } from "react";
 import type { StudyFormState, StudyFormErrors, StudyDay } from "@/types/study";
 
@@ -6,6 +7,12 @@ const DAYS: StudyDay[] = ["월", "화", "수", "목", "금", "토", "일"];
 const STUDY_TYPES = [
   { value: "offline", label: "내 지역" },
   { value: "online", label: "온라인" },
+];
+
+const LOCATIONS = [
+  "서울", "경기", "인천", "부산", "대구", "대전",
+  "광주", "울산", "세종", "강원", "충북", "충남",
+  "전북", "전남", "경북", "경남", "제주",
 ];
 
 const DURATIONS = [
@@ -21,6 +28,15 @@ const DIFFICULTIES = [
   { value: "beginner", label: "초급" },
   { value: "intermediate", label: "중급" },
   { value: "advanced", label: "고급" },
+];
+
+const TAG_OPTIONS = [
+  "JavaScript", "TypeScript", "React", "Vue", "Angular",
+  "Python", "Java", "Spring", "Node.js", "Express",
+  "Flutter", "Swift", "Kotlin", "Go", "Rust",
+  "알고리즘", "자료구조", "CS", "데이터베이스", "네트워크",
+  "AWS", "Docker", "Git", "머신러닝", "딥러닝",
+  "데이터분석", "SQL", "포트폴리오", "취업", "코딩테스트",
 ];
 
 const MAX_TITLE = 80;
@@ -42,6 +58,7 @@ interface StudyFormProps {
   handleThumbnailChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleDayToggle: (day: StudyDay) => void;
   handleAddTag: () => void;
+  handleAddTagDirect: (tag: string) => void;
   handleRemoveTag: (tag: string) => void;
   handleTagInputKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
   handleSubmit: (e: FormEvent) => void;
@@ -58,10 +75,22 @@ export default function StudyForm({
   handleThumbnailChange,
   handleDayToggle,
   handleAddTag,
+  handleAddTagDirect,
   handleRemoveTag,
   handleTagInputKeyDown,
   handleSubmit,
 }: StudyFormProps) {
+  const [isTagFocused, setIsTagFocused] = useState(false);
+
+  const filteredTagOptions = TAG_OPTIONS.filter(
+    (t) =>
+      !form.tags.includes(t) &&
+      (tagInput === "" || t.toLowerCase().includes(tagInput.toLowerCase())),
+  ).slice(0, 8);
+
+  const showTagDropdown =
+    isTagFocused && form.tags.length < MAX_TAGS && filteredTagOptions.length > 0;
+
   return (
     <form id="study-create-form" onSubmit={handleSubmit} noValidate>
 
@@ -83,7 +112,6 @@ export default function StudyForm({
             <p className="text-xs text-gray-400">(권장 사이즈 1200*1200px)</p>
           </div>
         )}
-        {/* 카메라 아이콘 */}
         {!form.thumbnailPreview && (
           <div className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white shadow flex items-center justify-center">
             <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,16 +182,40 @@ export default function StudyForm({
               </label>
             ))}
           </div>
-          {form.studyType === "offline" && (
-            <p className="mt-2 text-xs text-[#4F7BF7] flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4F7BF7] inline-block" />
-              해뜰음 에서 스터디팬을 모집합니다.
-            </p>
-          )}
           {errors.studyType && (
             <p className="mt-1 text-xs text-red-500">{errors.studyType}</p>
           )}
         </div>
+
+        {/* 오프라인 지역 — studyType === "offline" 일 때만 노출 */}
+        {form.studyType === "offline" && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              지역 <span className="text-[#4F7BF7]">*</span>
+            </label>
+            <div className="relative">
+              <select
+                value={form.location}
+                onChange={(e) => updateField("location", e.target.value)}
+                className="w-full appearance-none bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors text-gray-700"
+              >
+                <option value="">지역 선택</option>
+                {LOCATIONS.map((loc) => (
+                  <option key={loc} value={loc}>{loc}</option>
+                ))}
+              </select>
+              <svg
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            {errors.location && (
+              <p className="mt-1 text-xs text-red-500">{errors.location}</p>
+            )}
+          </div>
+        )}
 
         {/* 모집 인원 */}
         <div>
@@ -396,24 +448,44 @@ export default function StudyForm({
               ({form.tags.length}/{MAX_TAGS})
             </span>
           </label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={handleTagInputKeyDown}
-              placeholder={`태그 입력 (최대 ${MAX_TAGS}개)`}
-              disabled={form.tags.length >= MAX_TAGS}
-              className="flex-1 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors disabled:bg-gray-50 disabled:text-gray-400"
-            />
-            <button
-              type="button"
-              onClick={handleAddTag}
-              disabled={form.tags.length >= MAX_TAGS}
-              className="px-4 py-2.5 rounded-lg bg-[#4F7BF7] text-white text-sm font-medium hover:bg-[#3d68e0] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              추가
-            </button>
+          <div className="relative">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleTagInputKeyDown}
+                onFocus={() => setIsTagFocused(true)}
+                onBlur={() => setIsTagFocused(false)}
+                placeholder="태그 검색 또는 직접 입력"
+                disabled={form.tags.length >= MAX_TAGS}
+                className="flex-1 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors disabled:bg-gray-50 disabled:text-gray-400"
+              />
+              <button
+                type="button"
+                onClick={handleAddTag}
+                disabled={form.tags.length >= MAX_TAGS}
+                className="px-4 py-2.5 rounded-lg bg-[#4F7BF7] text-white text-sm font-medium hover:bg-[#3d68e0] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                추가
+              </button>
+            </div>
+            {showTagDropdown && (
+              <ul className="absolute z-10 left-0 right-[4.5rem] mt-1 bg-white border border-gray-200 rounded-lg shadow-md max-h-48 overflow-y-auto">
+                {filteredTagOptions.map((option) => (
+                  <li
+                    key={option}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handleAddTagDirect(option);
+                    }}
+                    className="px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#4F7BF7] cursor-pointer transition-colors"
+                  >
+                    {option}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           {form.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-3">
