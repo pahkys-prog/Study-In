@@ -1,7 +1,12 @@
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+
 export default function Router() {
   return (
-    <div>
-      <h1>Router Component</h1>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="grow" />
+      <Footer />
     </div>
   );
 }
