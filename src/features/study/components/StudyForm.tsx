@@ -11,14 +11,17 @@ const STUDY_TYPES = [
   { value: "online", label: "온라인" },
 ];
 
-
-const DURATIONS = [
-  "1주", "2주", "4주", "6주", "8주", "10주", "12주", "16주",
-];
+const DURATIONS = ["1주", "2주", "4주", "6주", "8주", "10주", "12주", "16주"];
 
 const SUBJECTS = [
-  "개념/학습", "응용/활용", "프로젝트", "챌린지",
-  "자격증/시험", "취업/코테", "특강", "기타",
+  "개념/학습",
+  "응용/활용",
+  "프로젝트",
+  "챌린지",
+  "자격증/시험",
+  "취업/코테",
+  "특강",
+  "기타",
 ];
 
 const DIFFICULTIES = [
@@ -28,12 +31,36 @@ const DIFFICULTIES = [
 ];
 
 const TAG_OPTIONS = [
-  "JavaScript", "TypeScript", "React", "Vue", "Angular",
-  "Python", "Java", "Spring", "Node.js", "Express",
-  "Flutter", "Swift", "Kotlin", "Go", "Rust",
-  "알고리즘", "자료구조", "CS", "데이터베이스", "네트워크",
-  "AWS", "Docker", "Git", "머신러닝", "딥러닝",
-  "데이터분석", "SQL", "포트폴리오", "취업", "코딩테스트",
+  "JavaScript",
+  "TypeScript",
+  "React",
+  "Vue",
+  "Angular",
+  "Python",
+  "Java",
+  "Spring",
+  "Node.js",
+  "Express",
+  "Flutter",
+  "Swift",
+  "Kotlin",
+  "Go",
+  "Rust",
+  "알고리즘",
+  "자료구조",
+  "CS",
+  "데이터베이스",
+  "네트워크",
+  "AWS",
+  "Docker",
+  "Git",
+  "머신러닝",
+  "딥러닝",
+  "데이터분석",
+  "SQL",
+  "포트폴리오",
+  "취업",
+  "코딩테스트",
 ];
 
 const MAX_TITLE = 80;
@@ -89,14 +116,14 @@ export default function StudyForm({
   ).slice(0, 8);
 
   const showTagDropdown =
-    isTagFocused && form.tags.length < MAX_TAGS && filteredTagOptions.length > 0;
+    isTagFocused &&
+    form.tags.length < MAX_TAGS &&
+    filteredTagOptions.length > 0;
 
   return (
     <form id="study-create-form" onSubmit={handleSubmit} noValidate>
-
       {/* ── 카드: 대표이미지 ~ 모집인원 ── */}
-      <div className="mx-4 mt-2 bg-white rounded-2xl overflow-hidden border border-gray-200">
-
+      <div className="mx-4 mt-2 rounded-2xl border border-gray-200 overflow-hidden">
         {/* 대표 이미지 */}
         <div
           className="relative w-full bg-gray-100 cursor-pointer"
@@ -111,7 +138,9 @@ export default function StudyForm({
             />
           ) : (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
-              <p className="text-sm font-medium text-gray-400">대표 이미지 삽입</p>
+              <p className="text-sm font-medium text-gray-400">
+                대표 이미지 삽입
+              </p>
               <p className="text-xs text-gray-400">(권장 사이즈 1200*1200px)</p>
             </div>
           )}
@@ -120,7 +149,13 @@ export default function StudyForm({
               <img src={iconImage} alt="" className="w-5 h-5" />
             </div>
           )}
-          <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleThumbnailChange} />
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleThumbnailChange}
+          />
         </div>
         {errors.thumbnail && (
           <p className="px-4 pt-1.5 text-xs text-red-500">{errors.thumbnail}</p>
@@ -128,7 +163,6 @@ export default function StudyForm({
 
         {/* 스터디 제목 / 유형 / 지역 / 모집인원 */}
         <div className="px-4 pt-5 pb-5 space-y-5">
-
           {/* 스터디 제목 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -142,9 +176,11 @@ export default function StudyForm({
               className="w-full min-h-[100px] border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors resize-none align-top"
             />
             <div className="flex justify-between mt-1">
-              {errors.title
-                ? <p className="text-xs text-red-500">{errors.title}</p>
-                : <span />}
+              {errors.title ? (
+                <p className="text-xs text-red-500">{errors.title}</p>
+              ) : (
+                <span />
+              )}
               <span className="text-xs text-gray-400 ml-auto">
                 {form.title.length}/{MAX_TITLE}
               </span>
@@ -161,7 +197,10 @@ export default function StudyForm({
             </label>
             <div className="flex gap-5">
               {STUDY_TYPES.map(({ value, label }) => (
-                <label key={value} className="flex items-center gap-2 cursor-pointer">
+                <label
+                  key={value}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
                   <div
                     onClick={() => updateField("studyType", value)}
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
@@ -194,13 +233,14 @@ export default function StudyForm({
             )}
           </div>
 
-
           {/* 모집 인원 */}
           <div>
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
                 모집 인원 <span className="text-red-500">*</span>
-                <span className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-gray-200 text-gray-500 text-xs font-bold cursor-default">?</span>
+                <span className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-gray-200 text-gray-500 text-xs font-bold cursor-default">
+                  ?
+                </span>
               </span>
               <div className="flex items-center gap-2">
                 <input
@@ -219,17 +259,15 @@ export default function StudyForm({
               <p className="mt-1 text-xs text-red-500">{errors.maxMembers}</p>
             )}
           </div>
-
         </div>
       </div>
       {/* ── 카드 끝 ── */}
 
-      {/* ── 소개 / 일정 ── */}
-      <div className="bg-white px-4 pt-6 pb-4 mt-4 space-y-5">
-
+      {/* ── 소개 / 일정 / 상세 일정 / 태그 설정 ── */}
+      <div className="bg-white px-4 pt-5 pb-8 mt-2 space-y-5">
         {/* 스터디 소개 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-lg font-medium text-gray-700 mb-2">
             스터디 소개 <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -237,8 +275,7 @@ export default function StudyForm({
             value={form.introduction}
             onChange={(e) => updateField("introduction", e.target.value)}
             placeholder="스터디 소개를 입력해 주세요."
-            rows={5}
-            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors resize-none"
+            className="w-full min-h-[288px] border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors resize-none"
           />
           <p className="text-xs text-gray-400 text-right mt-1">
             {form.introduction.length}/{MAX_INTRO}
@@ -247,7 +284,7 @@ export default function StudyForm({
 
         {/* 스터디 일정 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-lg font-medium text-gray-700 mb-2">
             스터디 일정
           </label>
           <textarea
@@ -255,24 +292,25 @@ export default function StudyForm({
             value={form.schedule}
             onChange={(e) => updateField("schedule", e.target.value)}
             placeholder="스터디 일정을 입력해 주세요."
-            rows={4}
-            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors resize-none"
+            className="w-full min-h-[288px] border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors resize-none"
           />
           <p className="text-xs text-gray-400 text-right mt-1">
             {form.schedule.length}/{MAX_SCHEDULE}
           </p>
         </div>
-      </div>
 
-      {/* ── 상세 일정 ── */}
-      <div className="bg-gray-50 px-4 pt-6 pb-6 mt-2 space-y-5">
-        <h2 className="text-base font-bold text-gray-900">상세 일정</h2>
+        {/* ── 구분선 ── */}
+        <div className="border-t border-gray-200" />
+
+        {/* ── 상세 일정 ── */}
+        <div className="space-y-5">
+        <h2 className="text-base font-bold text-gray-900 text-center">상세 일정</h2>
 
         {/* 스터디 요일 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="flex items-start gap-4">
+          <span className="w-24 shrink-0 text-sm font-medium text-gray-700 pt-1">
             스터디 요일
-          </label>
+          </span>
           <div className="flex flex-wrap gap-2">
             {DAYS.map((day) => (
               <button
@@ -292,88 +330,101 @@ export default function StudyForm({
         </div>
 
         {/* 스터디 시작일 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="flex items-center gap-4">
+          <span className="w-24 shrink-0 text-sm font-medium text-gray-700">
             스터디 시작일 <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            value={form.startDate}
-            onChange={(e) => updateField("startDate", e.target.value)}
-            className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors"
-          />
-          {errors.startDate && (
-            <p className="mt-1 text-xs text-red-500">{errors.startDate}</p>
-          )}
+          </span>
+          <div className="flex-1">
+            <input
+              type="date"
+              value={form.startDate}
+              onChange={(e) => updateField("startDate", e.target.value)}
+              className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors"
+            />
+            {errors.startDate && (
+              <p className="mt-1 text-xs text-red-500">{errors.startDate}</p>
+            )}
+          </div>
         </div>
 
         {/* 스터디 기간 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="flex items-center gap-4">
+          <span className="w-24 shrink-0 text-sm font-medium text-gray-700">
             스터디 기간 <span className="text-red-500">*</span>
-          </label>
-          <div className="relative">
-            <select
-              value={form.durationWeeks}
-              onChange={(e) => updateField("durationWeeks", e.target.value)}
-              className="w-full appearance-none bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors text-gray-700"
-            >
-              <option value="">스터디 기간 선택</option>
-              {DURATIONS.map((d) => (
-                <option key={d} value={d}>{d}</option>
-              ))}
-            </select>
-            <svg
-              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-              fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
+          </span>
+          <div className="flex-1">
+            <div className="relative">
+              <select
+                value={form.durationWeeks}
+                onChange={(e) => updateField("durationWeeks", e.target.value)}
+                className="w-full appearance-none bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors text-gray-700"
+              >
+                <option value="">스터디 기간 선택</option>
+                {DURATIONS.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+              <svg
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+            {errors.durationWeeks && (
+              <p className="mt-1 text-xs text-red-500">{errors.durationWeeks}</p>
+            )}
           </div>
-          {errors.durationWeeks && (
-            <p className="mt-1 text-xs text-red-500">{errors.durationWeeks}</p>
-          )}
         </div>
 
         {/* 스터디 시간 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="flex items-start gap-4">
+          <span className="w-24 shrink-0 text-sm font-medium text-gray-700 pt-2.5">
             스터디 시간 <span className="text-red-500">*</span>
-          </label>
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
+          </span>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
               <input
                 type="time"
                 value={form.startTime}
                 onChange={(e) => updateField("startTime", e.target.value)}
-                className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors"
+                className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors"
               />
-            </div>
-            <span className="text-gray-400 text-sm shrink-0">~</span>
-            <div className="relative flex-1">
+              <span className="text-gray-400 text-sm shrink-0">~</span>
               <input
                 type="time"
                 value={form.endTime}
                 onChange={(e) => updateField("endTime", e.target.value)}
-                className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors"
+                className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors"
               />
             </div>
+            {errors.startTime && (
+              <p className="mt-1 text-xs text-red-500">{errors.startTime}</p>
+            )}
+            {errors.endTime && (
+              <p className="mt-1 text-xs text-red-500">{errors.endTime}</p>
+            )}
+            {errors.timeRange && (
+              <p className="mt-1 text-xs text-red-500">{errors.timeRange}</p>
+            )}
           </div>
-          {errors.startTime && (
-            <p className="mt-1 text-xs text-red-500">{errors.startTime}</p>
-          )}
-          {errors.endTime && (
-            <p className="mt-1 text-xs text-red-500">{errors.endTime}</p>
-          )}
-          {errors.timeRange && (
-            <p className="mt-1 text-xs text-red-500">{errors.timeRange}</p>
-          )}
         </div>
-      </div>
+        </div>
 
-      {/* ── 스터디 태그 설정 ── */}
-      <div className="bg-white px-4 pt-6 pb-8 mt-2 space-y-5">
-        <h2 className="text-base font-bold text-gray-900">스터디 태그 설정</h2>
+        {/* ── 구분선 ── */}
+        <div className="border-t border-gray-200" />
+
+        {/* ── 스터디 태그 설정 ── */}
+        <h2 className="text-base font-bold text-gray-900 text-center">스터디 태그 설정</h2>
 
         {/* 스터디 주제 */}
         <div>
