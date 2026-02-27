@@ -5,6 +5,9 @@ import iconLocation from "@/assets/base/icon-location.svg";
 import iconClock from "@/assets/base/icon-clock.svg";
 import iconCalendar from "@/assets/base/icon-Calendar.svg";
 import iconHelpCircle from "@/assets/base/icon-help-circle.svg";
+import radioBtnOff from "@/assets/base/radio-btn-OFF.svg";
+import radioBtnOn from "@/assets/base/radio-btn-ON.svg";
+import iconBtnX from "@/assets/base/icon-btn-X.svg";
 import type { StudyFormState, StudyFormErrors, StudyDay } from "@/types/study";
 
 const DAYS: StudyDay[] = ["월", "화", "수", "목", "금", "토", "일"];
@@ -326,7 +329,7 @@ export default function StudyForm({
             />
           ) : (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
-              <p className="text-sm font-medium text-gray-400">
+              <p className="text-sm font-normal text-gray-400">
                 대표 이미지 삽입
               </p>
               <p className="text-xs text-gray-400">(권장 사이즈 1200*1200px)</p>
@@ -382,7 +385,7 @@ export default function StudyForm({
 
           {/* 스터디 유형 */}
           <div className="flex items-start gap-4 lg:gap-0 lg:!mt-[30px] lg:grid lg:grid-cols-[140px_1fr] lg:items-start">
-            <span className="shrink-0 text-sm font-medium text-gray-700 lg:text-[16px] lg:font-bold lg:pt-0.5">
+            <span className="shrink-0 text-sm font-normal text-gray-700 lg:text-[16px] lg:font-bold lg:pt-0.5">
               스터디 유형 <span className="text-red-500">*</span>
             </span>
             <div>
@@ -391,23 +394,14 @@ export default function StudyForm({
                   <label
                     key={value}
                     className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => updateField("studyType", value)}
                   >
-                    <div
-                      onClick={() => updateField("studyType", value)}
-                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                        form.studyType === value
-                          ? "border-[#4F7BF7]"
-                          : "border-gray-300"
-                      }`}
-                    >
-                      {form.studyType === value && (
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#4F7BF7]" />
-                      )}
-                    </div>
-                    <span
-                      onClick={() => updateField("studyType", value)}
-                      className="text-sm lg:text-[16px] text-gray-700"
-                    >
+                    <img
+                      src={form.studyType === value ? radioBtnOn : radioBtnOff}
+                      alt={form.studyType === value ? "선택됨" : "선택 안됨"}
+                      className="w-[18px] h-[18px] shrink-0"
+                    />
+                    <span className="text-sm lg:text-[16px] text-gray-700">
                       {label}
                     </span>
                   </label>
@@ -513,7 +507,7 @@ export default function StudyForm({
                 key={day}
                 type="button"
                 onClick={() => handleDayToggle(day)}
-                className={`w-[40px] h-[40px] rounded-full text-sm font-medium border transition-colors ${
+                className={`w-[40px] h-[40px] rounded-full text-sm font-normal border transition-colors ${
                   form.days.includes(day)
                     ? "bg-[#4F7BF7] border-[#4F7BF7] text-background"
                     : "bg-background border-gray-300 text-gray-600"
@@ -629,7 +623,7 @@ export default function StudyForm({
                   key={s}
                   type="button"
                   onClick={() => updateField("subject", s)}
-                  className={`px-3 py-1.5 lg:px-4 lg:py-[10px] rounded-full text-[14px] lg:text-[16px] font-medium border transition-colors ${
+                  className={`px-3 py-1.5 lg:px-4 lg:py-[10px] rounded-full text-[14px] lg:text-[16px] font-normal border transition-colors ${
                     form.subject === s
                       ? "bg-[#4F7BF7] border-[#4F7BF7] text-background"
                       : "bg-gray-100 border-gray-100 text-gray-700"
@@ -657,7 +651,7 @@ export default function StudyForm({
                   key={value}
                   type="button"
                   onClick={() => updateField("difficulty", value)}
-                  className={`px-3 py-1.5 lg:px-4 lg:py-[10px] rounded-full text-[14px] lg:text-[16px] font-medium border transition-colors ${
+                  className={`px-3 py-1.5 lg:px-4 lg:py-[10px] rounded-full text-[14px] lg:text-[16px] font-normal border transition-colors ${
                     form.difficulty === value
                       ? "bg-[#4F7BF7] border-[#4F7BF7] text-background"
                       : "bg-gray-100 border-gray-100 text-gray-700"
@@ -704,7 +698,7 @@ export default function StudyForm({
                       e.preventDefault();
                       handleAddTagDirect(option);
                     }}
-                    className="px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#4F7BF7] cursor-pointer transition-colors"
+                    className="px-3 py-2 text-sm font-normal text-gray-700 hover:bg-blue-50 hover:text-[#4F7BF7] cursor-pointer transition-colors"
                   >
                     {option}
                   </li>
@@ -717,16 +711,16 @@ export default function StudyForm({
               {form.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 text-gray-700 text-[14px] rounded-full"
+                  className="inline-flex items-center gap-2 px-2.5 py-1 bg-gray-100 text-gray-700 text-[14px] rounded-full"
                 >
                   {tag}
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(tag)}
-                    className="text-gray-400 hover:text-gray-700 leading-none"
+                    className="leading-none"
                     aria-label={`${tag} 삭제`}
                   >
-                    ×
+                    <img src={iconBtnX} alt="" className="w-4 h-4" />
                   </button>
                 </span>
               ))}
