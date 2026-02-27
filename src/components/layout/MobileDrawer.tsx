@@ -59,10 +59,15 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                   <img src={profileIcon} alt="프로필" className="w-6 h-6" />
                   프로필
                 </Link>
-                <button className="flex flex-col items-center gap-1 text-xs text-gray-500">
+                {/* My 스터디 클릭 시 마이스터디 페이지로 이동 */}
+                <Link
+                  to="/my-study"
+                  onClick={onClose}
+                  className="flex flex-col items-center gap-1 text-xs text-gray-500"
+                >
                   <img src={profileIcon} alt="My 스터디" className="w-6 h-6" />
                   My 스터디
-                </button>
+                </Link>
                 <button className="relative flex flex-col items-center gap-1 text-xs text-gray-500">
                   <div className="relative">
                     <img src={notificationIcon} alt="알림" className="w-6 h-6" />
