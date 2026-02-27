@@ -7,7 +7,11 @@ interface StudyCardProps {
 
 const StudyCard = ({ study }: StudyCardProps) => {
   return (
+<<<<<<< HEAD
     <div className="bg-background rounded-[20px] border border-gray-100 overflow-hidden shadow-sm">
+=======
+    <div className="bg-white rounded-[20px] border border-gray-100 overflow-hidden shadow-sm">
+>>>>>>> upstream
       <div className="relative aspect-16/10">
         <img 
           src={study.thumbnail} 
@@ -15,7 +19,11 @@ const StudyCard = ({ study }: StudyCardProps) => {
           className="w-full h-full object-cover" 
         />
         <div className="absolute top-3 left-3">
+<<<<<<< HEAD
           <span className="bg-primary text-background text-xs font-bold px-2 py-1 rounded-lg">
+=======
+          <span className="bg-primary text-white text-xs font-bold px-2 py-1 rounded-lg">
+>>>>>>> upstream
             {study.status}
           </span>
         </div>
