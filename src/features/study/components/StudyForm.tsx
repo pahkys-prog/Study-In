@@ -337,7 +337,7 @@ export default function StudyForm({
         )}
 
         {/* 스터디 제목 / 유형 / 지역 / 모집인원 */}
-        <div className="px-4 pt-5 pb-5 space-y-5 lg:flex-1 lg:px-[30px] lg:flex lg:flex-col lg:justify-center">
+        <div className="px-4 pt-5 pb-5 space-y-5 lg:flex-1 lg:px-[30px] lg:flex lg:flex-col">
           {/* 스터디 제목 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2 lg:text-base lg:font-bold">

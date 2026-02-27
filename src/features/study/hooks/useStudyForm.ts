@@ -30,8 +30,10 @@ function validateForm(state: StudyFormState): StudyFormErrors {
   if (!state.studyType) errors.studyType = "스터디 유형을 선택해주세요.";
   if (state.maxMembers === "") {
     errors.maxMembers = "모집 인원을 입력해주세요.";
-  } else if (Number(state.maxMembers) < 3 || Number(state.maxMembers) > 99) {
+  } else if (Number(state.maxMembers) < 3) {
     errors.maxMembers = "스터디원은 3명 이상 모집해야 합니다.";
+  } else if (Number(state.maxMembers) >= 100) {
+    errors.maxMembers = "100명 이상 모집할 수 없습니다.";
   }
   if (!state.startDate) errors.startDate = "시작일을 선택해주세요.";
   if (state.durationWeeks === "") errors.durationWeeks = "기간을 입력해주세요.";
@@ -88,8 +90,10 @@ export function useStudyForm(onSubmit?: (state: StudyFormState) => void) {
           const num = Number(value);
           if ((value as string) === "") {
             next.maxMembers = "모집 인원을 입력해주세요.";
-          } else if (num < 3 || num > 99) {
+          } else if (num < 3) {
             next.maxMembers = "스터디원은 3명 이상 모집해야 합니다.";
+          } else if (num >= 100) {
+            next.maxMembers = "100명 이상 모집할 수 없습니다.";
           } else {
             delete next.maxMembers;
           }
@@ -122,8 +126,10 @@ export function useStudyForm(onSubmit?: (state: StudyFormState) => void) {
         const num = Number(current.maxMembers);
         if (current.maxMembers === "") {
           next.maxMembers = "모집 인원을 입력해주세요.";
-        } else if (num < 3 || num > 99) {
+        } else if (num < 3) {
           next.maxMembers = "스터디원은 3명 이상 모집해야 합니다.";
+        } else if (num >= 100) {
+          next.maxMembers = "100명 이상 모집할 수 없습니다.";
         }
       }
       return next;
