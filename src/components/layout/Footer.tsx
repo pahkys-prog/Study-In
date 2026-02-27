@@ -102,7 +102,7 @@ export default function Footer() {
 
       {/* 데스크탑 심플 푸터 - 로그인 (lg 이상) */}
       {isLoggedIn && (
-        <div className="hidden lg:flex flex-col items-center justify-center gap-3 bg-surface py-6">
+        <div className="hidden lg:flex flex-col items-center justify-center gap-3 bg-background py-6">
           <div className="flex items-center gap-4">
             {POLICY_LINKS.map(({ label, href }, index) => (
               <span key={label} className="flex items-center gap-4">
