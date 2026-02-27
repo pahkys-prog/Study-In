@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import StudyForm from "@/features/study/components/StudyForm";
+import StudyCreateTopBar from "@/features/study/components/StudyCreateTopBar";
 import { useStudyForm } from "@/features/study/hooks/useStudyForm";
 import Header from "@/components/layout/Header";
 import type { StudyFormState } from "@/types/study";
@@ -39,19 +40,8 @@ export default function StudyCreate() {
         <Header />
       </div>
 
-      {/* ── 스터디 만들기 CTA 버튼 ── */}
-      <div className="max-w-[1200px] mx-auto px-4 pt-3 pb-1 flex justify-end">
-        <button
-          type="submit"
-          form="study-create-form"
-          disabled={!isValid}
-          className={`min-w-[160px] min-h-[40px] py-[10px] px-6 rounded-xl text-sm font-bold text-background transition-colors ${
-            isValid ? "bg-[#4F7BF7]" : "bg-[#c5d3fc]"
-          }`}
-        >
-          스터디 만들기
-        </button>
-      </div>
+      {/* ── 스터디 만들기 TopBar ── */}
+      <StudyCreateTopBar isValid={isValid} />
 
       {/* ── 폼 ── */}
       <main className="max-w-[1200px] mx-auto pb-10">
