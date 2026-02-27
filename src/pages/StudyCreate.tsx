@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { Link } from "react-router-dom";
 import StudyForm from "@/features/study/components/StudyForm";
 import { useStudyForm } from "@/features/study/hooks/useStudyForm";
 import MobileDrawer from "@/components/layout/MobileDrawer";
@@ -53,7 +54,7 @@ export default function StudyCreate() {
           </button>
 
           {/* 로고 */}
-          <img src={iconLogo} alt="Studyin" className="h-6" />
+          <Link to="/"><img src={iconLogo} alt="Studyin" className="h-6" /></Link>
 
           {/* 채팅 */}
           <button
