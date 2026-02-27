@@ -34,7 +34,7 @@ const StudyFilter = () => {
             className="group flex flex-col items-center gap-2 w-full md:w-24"
           >
             {/* 호버 효과: 테마 변수 activation(연한 파랑) 활용 */}
-            <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-[20px] flex items-center justify-center shadow-sm border border-gray-100 transition-all duration-200 group-hover:bg-activation group-hover:border-primary-light group-hover:-translate-y-1">
+            <div className="w-14 h-14 md:w-16 md:h-16 bg-background rounded-[20px] flex items-center justify-center shadow-sm border border-gray-100 transition-all duration-200 group-hover:bg-activation group-hover:border-primary-light group-hover:-translate-y-1">
               <span className="text-2xl">{cat.icon}</span>
             </div>
             <span className="text-sm font-weight-medium text-gray-700 group-hover:text-primary transition-colors">
