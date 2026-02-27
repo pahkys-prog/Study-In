@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const ProfileEditForm = () => {
   // 닉네임 입력값 상태 관리
@@ -15,10 +16,18 @@ const ProfileEditForm = () => {
   // 변경사항 있고 유효성 검사 통과시 저장하기 버튼 활성화
   // 닉네임 변경시 중복확인 필수
   const isSaveEnabled = nickname !== '' && isNicknameChecked
+  const navigate = useNavigate()
 
   return (
     <div className="flex flex-col px-4 py-6 gap-4 bg-background">
-
+    {/* 뒤로가기 버튼 */}
+    <button
+      onClick={() => navigate('/profile')}
+      className="flex items-center gap-1 text-base text-gray-700"
+  >
+      ← 뒤로가기
+    </button>
+    
       {/* 프로필 이미지 수정 - 실제 데이터 연결 시 이미지 업로드 기능 추가 필요 */}
       <div className="flex flex-col items-center gap-2">
         <div className="w-24 h-24 rounded-full bg-gray-300 overflow-hidden">
