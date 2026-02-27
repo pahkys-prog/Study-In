@@ -1,16 +1,10 @@
-import { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { useCallback } from "react";
 import StudyForm from "@/features/study/components/StudyForm";
 import { useStudyForm } from "@/features/study/hooks/useStudyForm";
-import MobileDrawer from "@/components/layout/MobileDrawer";
+import Header from "@/components/layout/Header";
 import type { StudyFormState } from "@/types/study";
-import iconLogo from "@/assets/base/icon-Logo.svg";
-import iconChatting from "@/assets/base/icon-chatting.svg";
-import iconHamburger from "@/assets/base/icon-hamburger.svg";
 
 export default function StudyCreate() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
   const handleSubmit = useCallback((formState: StudyFormState) => {
     // TODO: API 붙일 때 여기만 교체
     console.log("[StudyCreate] submit payload →", formState);
@@ -39,38 +33,14 @@ export default function StudyCreate() {
   const userLocation: string | undefined = undefined;
 
   return (
-    <>
     <div className="min-h-screen bg-white">
-      {/* ── 앱 헤더 ── */}
-      <header className="bg-background border-b border-gray-100 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto px-4 h-12 flex items-center justify-between">
-          {/* 햄버거 */}
-          <button
-            type="button"
-            className="p-1 -ml-1"
-            aria-label="메뉴"
-            onClick={() => setDrawerOpen(true)}
-          >
-            <img src={iconHamburger} alt="메뉴" className="w-6 h-6" />
-          </button>
-
-          {/* 로고 */}
-          <Link to="/"><img src={iconLogo} alt="Studyin" className="h-6" /></Link>
-
-          {/* 채팅 */}
-          <button
-            type="button"
-            className="p-1 -mr-1"
-            aria-label="채팅"
-            onClick={() => console.log("[추후] 채팅")}
-          >
-            <img src={iconChatting} alt="채팅" className="w-6 h-6" />
-          </button>
-        </div>
-      </header>
+      {/* ── 앱 헤더 (모바일/데스크탑 공통) ── */}
+      <div className="sticky top-0 z-10">
+        <Header />
+      </div>
 
       {/* ── 스터디 만들기 CTA 버튼 ── */}
-      <div className="max-w-lg mx-auto px-4 pt-3 pb-1 flex justify-end">
+      <div className="max-w-[990px] mx-auto px-4 pt-3 pb-1 flex justify-end">
         <button
           type="submit"
           form="study-create-form"
@@ -84,7 +54,7 @@ export default function StudyCreate() {
       </div>
 
       {/* ── 폼 ── */}
-      <main className="max-w-lg mx-auto pb-10">
+      <main className="max-w-[990px] mx-auto pb-10">
         <StudyForm
           form={form}
           errors={errors}
@@ -106,8 +76,5 @@ export default function StudyCreate() {
         />
       </main>
     </div>
-
-    <MobileDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
-    </>
   );
 }

@@ -298,12 +298,11 @@ export default function StudyForm({
   return (
     <form id="study-create-form" onSubmit={handleSubmit} noValidate>
       {/* ── 카드: 대표이미지 ~ 모집인원 ── */}
-      <div className="mx-4 mt-2 rounded-2xl border border-gray-200 overflow-hidden bg-background">
+      <div className="mx-4 mt-2 rounded-2xl border border-gray-200 overflow-hidden bg-background lg:mx-0 lg:flex lg:flex-row">
         {/* 대표 이미지 */}
         <label
           htmlFor="thumbnail-input"
-          className="relative w-full bg-gray-100 cursor-pointer block"
-          style={{ minHeight: "358px" }}
+          className="relative w-full min-h-[358px] bg-gray-100 cursor-pointer block lg:w-[280px] lg:min-h-0 lg:shrink-0"
         >
           {form.thumbnailPreview ? (
             <img
@@ -338,7 +337,7 @@ export default function StudyForm({
         )}
 
         {/* 스터디 제목 / 유형 / 지역 / 모집인원 */}
-        <div className="px-4 pt-5 pb-5 space-y-5">
+        <div className="px-4 pt-5 pb-5 space-y-5 lg:flex-1">
           {/* 스터디 제목 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -349,8 +348,13 @@ export default function StudyForm({
               value={form.title}
               onChange={(e) => updateField("title", e.target.value)}
               onBlur={() => handleBlurField("title")}
+              onInput={(e) => {
+                const el = e.currentTarget;
+                el.style.height = "auto";
+                el.style.height = `${el.scrollHeight}px`;
+              }}
               placeholder="스터디 제목 입력"
-              className="w-full min-h-[100px] border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors resize-none align-top"
+              className="w-full min-h-[100px] lg:min-h-[50px] border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#4F7BF7] transition-colors resize-none align-top"
             />
             <div className="flex justify-between mt-1">
               {errors.title ? (
@@ -513,7 +517,7 @@ export default function StudyForm({
           <span className="w-24 shrink-0 text-sm font-medium text-gray-700">
             스터디 시작일 <span className="text-red-500">*</span>
           </span>
-          <div className="flex-1">
+          <div className="flex-1 lg:max-w-[240px]">
             <div ref={dateContainerRef} className="relative w-full">
               {/* 보이는 표시 — 클릭 시 showPicker() 호출 */}
               <div
@@ -548,7 +552,7 @@ export default function StudyForm({
           <span className="w-24 shrink-0 text-sm font-medium text-gray-700">
             스터디 기간 <span className="text-red-500">*</span>
           </span>
-          <div className="flex-1">
+          <div className="flex-1 lg:max-w-[240px]">
             <SelectPicker
               value={form.durationWeeks}
               onChange={(v) => updateField("durationWeeks", v)}
@@ -566,7 +570,7 @@ export default function StudyForm({
           <span className="w-24 shrink-0 text-sm font-medium text-gray-700 pt-2.5">
             스터디 시간 <span className="text-red-500">*</span>
           </span>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 lg:max-w-[360px]">
             <div className="flex items-center gap-2">
               <TimePicker
                 value={form.startTime}
