@@ -40,7 +40,7 @@ export default function StudyCreate() {
       </div>
 
       {/* ── 스터디 만들기 CTA 버튼 ── */}
-      <div className="max-w-[990px] mx-auto px-4 pt-3 pb-1 flex justify-end">
+      <div className="max-w-[1200px] mx-auto px-4 pt-3 pb-1 flex justify-end">
         <button
           type="submit"
           form="study-create-form"
@@ -54,7 +54,7 @@ export default function StudyCreate() {
       </div>
 
       {/* ── 폼 ── */}
-      <main className="max-w-[990px] mx-auto pb-10">
+      <main className="max-w-[1200px] mx-auto pb-10">
         <StudyForm
           form={form}
           errors={errors}
