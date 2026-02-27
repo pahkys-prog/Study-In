@@ -51,10 +51,14 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
               </Link>
               {/* 프로필 / My 스터디 / 알림 아이콘 탭 */}
               <div className="flex justify-around w-full pt-2">
-                <button className="flex flex-col items-center gap-1 text-xs text-gray-500">
+                <Link
+                  to="/profile"
+                  onClick={onClose}
+                  className="flex flex-col items-center gap-1 text-xs text-gray-500"
+                >
                   <img src={profileIcon} alt="프로필" className="w-6 h-6" />
                   프로필
-                </button>
+                </Link>
                 <button className="flex flex-col items-center gap-1 text-xs text-gray-500">
                   <img src={profileIcon} alt="My 스터디" className="w-6 h-6" />
                   My 스터디
