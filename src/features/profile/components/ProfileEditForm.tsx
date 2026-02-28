@@ -1,18 +1,35 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useUpload from '@/hooks/useUpload'
+import { getFullUrl } from '@/api/upload'
+import personIcon from '@/assets/base/icon-person.svg'
 
 // 선택 가능한 전체 태그 목록
 const allTags = ['Python', 'JS', 'Java', 'React', 'Django', '크롬확장프로그램', '사이드프로젝트', '알고리즘', '취업준비']
 
 const ProfileEditForm = () => {
-  const [nickname, setNickname] = useState('')
-  const [isNicknameChecked, setIsNicknameChecked] = useState(false)
-  const [bio, setBio] = useState('')
-  const [region, setRegion] = useState('')
-  const [github, setGithub] = useState('')
-  const [selectedTags, setSelectedTags] = useState<string[]>(['Python', 'JS'])
   const navigate = useNavigate()
+  const { uploading, handleImageUpload } = useUpload()
 
+  // 프로필 이미지 상태
+  const [profileImg, setProfileImg] = useState<string | null>(null)
+  // 파일 input 참조
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // 닉네임 입력값 상태 관리
+  const [nickname, setNickname] = useState('')
+  // 닉네임 중복확인 여부 상태
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false)
+  // 소개 입력값 상태 관리
+  const [bio, setBio] = useState('')
+  // 지역 입력값 상태 관리
+  const [region, setRegion] = useState('')
+  // GitHub 입력값 상태 관리
+  const [github, setGithub] = useState('')
+  // 선택된 태그 상태 관리
+  const [selectedTags, setSelectedTags] = useState<string[]>(['Python', 'JS'])
+
+  // 저장하기 버튼 활성화 조건
   const isSaveEnabled = nickname !== '' && isNicknameChecked
 
   // 태그 클릭시 선택/해제
@@ -22,6 +39,14 @@ const ProfileEditForm = () => {
     } else {
       setSelectedTags([...selectedTags, tag])
     }
+  }
+
+  // 이미지 파일 선택 시 업로드
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const url = await handleImageUpload(file)
+    if (url) setProfileImg(getFullUrl(url))
   }
 
   return (
@@ -35,17 +60,29 @@ const ProfileEditForm = () => {
         ← 뒤로가기
       </button>
 
-      {/* 프로필 이미지 수정 - 실제 데이터 연결 시 이미지 업로드 기능 추가 필요 */}
+      {/* 프로필 이미지 수정 */}
       <div className="flex flex-col items-center gap-2">
-        <div className="w-24 h-24 rounded-full bg-gray-300 overflow-hidden">
-          <img
-            src="https://via.placeholder.com/96"
-            alt="프로필 이미지"
-            className="w-full h-full object-cover"
-          />
+        <div className="w-24 h-24 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center">
+          {profileImg ? (
+            <img src={profileImg} alt="프로필 이미지" className="w-full h-full object-cover" />
+          ) : (
+            <img src={personIcon} alt="프로필 이미지" className="w-14 h-14" />
+          )}
         </div>
-        <button className="text-base text-primary font-medium">
-          이미지 변경
+        {/* 숨겨진 파일 input */}
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleImageChange}
+          className="hidden"
+        />
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          className="text-base text-primary font-medium"
+        >
+          {uploading ? '업로드 중...' : '이미지 변경'}
         </button>
       </div>
 
@@ -64,8 +101,8 @@ const ProfileEditForm = () => {
             className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-base text-gray-900 placeholder:text-gray-500 focus:outline-none focus:border-primary"
           />
           <button
-            onClick={() => setIsNicknameChecked(true)} // 실제 중복확인 API 연결 필요
-            className="px-3 py-2 bg-primary text-background text-base rounded-lg"
+            onClick={() => setIsNicknameChecked(true)}
+            className="px-3 py-2 bg-primary text-white text-base rounded-lg"
           >
             중복확인
           </button>
@@ -110,7 +147,7 @@ const ProfileEditForm = () => {
         />
       </div>
 
-      {/* 관심 분야 태그 - 클릭으로 선택/해제 */}
+      {/* 관심 분야 태그 */}
       <div className="flex flex-col gap-1">
         <label className="text-base font-medium text-gray-900">관심 분야</label>
         <div className="flex flex-wrap gap-2">
@@ -130,13 +167,13 @@ const ProfileEditForm = () => {
         </div>
       </div>
 
-      {/* 저장하기 버튼 - 변경사항 있고 유효성 검사 통과시 활성화 */}
+      {/* 저장하기 버튼 */}
       <button
         disabled={!isSaveEnabled}
         className={`mt-4 w-full py-2 rounded-lg text-base ${
           isSaveEnabled
-            ? 'bg-primary text-background cursor-pointer hover:bg-primary-light'
-            : 'bg-gray-300 text-background cursor-not-allowed'
+            ? 'bg-primary text-white cursor-pointer'
+            : 'bg-gray-300 text-white cursor-not-allowed'
         }`}
       >
         저장하기
