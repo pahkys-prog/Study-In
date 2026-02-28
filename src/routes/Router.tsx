@@ -15,22 +15,22 @@ export default function Router() {
     <BrowserRouter>
       <Routes>
         
-        {/* 공통 레이아웃 (헤더 + 푸터) */}
+        {/* 1. 공통 레이아웃 (헤더와 푸터가 있는 페이지들) */}
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/study/:studyId" element={<StudyDetail />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/edit" element={<ProfileEdit />} />
-          {/* 마이 스터디 페이지 */}
+          {/* 마이 스터디 페이지 - B2 담당 */}
           <Route path="/my-study" element={<MyStudy />} />
-          {/* 알림 페이지 */}
+          {/* 알림 페이지 - B2 담당 */}
           <Route path="/notification" element={<Notification />} />
         </Route>
         
-        {/* 스터디 만들기 */}
+        {/* 2. 스터디 만들기 (독립 페이지) */}
         <Route path="/study/create" element={<StudyCreate />} />
 
-        {/* 인증 레이아웃 */}
+        {/* 3. 인증 관련 레이아웃 */}
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<div>회원가입 화면 준비 중...</div>} />
@@ -41,3 +41,4 @@ export default function Router() {
     </BrowserRouter>
   );
 }
+
