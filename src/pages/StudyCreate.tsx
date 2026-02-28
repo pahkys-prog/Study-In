@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import StudyForm from "@/features/study/components/StudyForm";
@@ -7,21 +7,47 @@ import { useStudyForm } from "@/features/study/hooks/useStudyForm";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import type { StudyFormState } from "@/types/study";
-import { uploadStudyThumbnail, createStudy } from "@/api/study";
+import { createStudy } from "@/api/study";
+import useUpload from "@/hooks/useUpload";
+import { getFullUrl } from "@/api/upload";
+import { getProfile } from "@/api/profile";
+import { storage } from "@/utils/storage";
 
 export default function StudyCreate() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const { uploading, handleImageUpload } = useUpload();
+  const [userLocationId, setUserLocationId] = useState<number | undefined>(undefined);
+  const [userLocation, setUserLocation] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const userId = storage.getUserId();
+    if (!userId) return;
+    getProfile(userId)
+      .then((profile) => {
+        if (profile.preferred_region) {
+          setUserLocationId(profile.preferred_region.id);
+          setUserLocation(profile.preferred_region.location);
+        }
+      })
+      .catch(() => {
+        // 프로필 조회 실패 시 지역 없이 진행
+      });
+  }, []);
 
   const handleSubmit = useCallback(async (formState: StudyFormState) => {
-    if (isSubmitting) return;
+    if (isSubmitting || uploading) return;
     setIsSubmitting(true);
     setApiError(null);
     try {
-      const thumbnailUrl = await uploadStudyThumbnail(formState.thumbnail!);
-      // TODO: 프로필 API 연동 시 preferred_region.id를 세 번째 인자로 전달
-      const { id } = await createStudy(formState, thumbnailUrl);
+      const url = await handleImageUpload(formState.thumbnail!);
+      if (!url) {
+        setApiError("썸네일 업로드에 실패했습니다. 다시 시도해주세요.");
+        return;
+      }
+      const thumbnailUrl = getFullUrl(url);
+      const { id } = await createStudy(formState, thumbnailUrl, userLocationId);
       navigate(`/study/${id}`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -43,7 +69,7 @@ export default function StudyCreate() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [isSubmitting, navigate]);
+  }, [isSubmitting, uploading, navigate, handleImageUpload, userLocationId]);
 
   const {
     form,
@@ -64,9 +90,6 @@ export default function StudyCreate() {
     handleReset,
   } = useStudyForm(handleSubmit);
 
-  // TODO: 프로필 API 연결 시 로그인 사용자의 인증된 지역으로 교체
-  const userLocation: string | undefined = undefined;
-
   return (
     <div className="min-h-screen bg-background">
       {/* ── 앱 헤더 (모바일/데스크탑 공통) ── */}
@@ -75,7 +98,7 @@ export default function StudyCreate() {
       </div>
 
       {/* ── 스터디 만들기 TopBar ── */}
-      <StudyCreateTopBar isValid={isValid} isSubmitting={isSubmitting} />
+      <StudyCreateTopBar isValid={isValid} isSubmitting={isSubmitting || uploading} />
 
       {/* ── 폼 ── */}
       <main className="max-w-[1200px] mx-auto pb-10">
