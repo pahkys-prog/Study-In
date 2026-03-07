@@ -27,10 +27,8 @@ export default function Home() {
   return (
     <div className="max-w-[1200px] mx-auto px-4 py-10">
       <div className="flex flex-col md:flex-row gap-8 items-start">
-        {/* 왼쪽 메인 영역 */}
         <div className="flex-1 w-full space-y-12">
           <StudyBanner />
-          {/* 카테고리 영역 (피그마 시안 반영) */}
           <div className="flex justify-between items-center py-4 overflow-x-auto gap-4 no-scrollbar">
             {categories.map((category) => (
               <button
@@ -56,7 +54,6 @@ export default function Home() {
               스터디 둘러보기
             </h2>
 
-            {/* 탭 버튼 영역 */}
             <div className="flex gap-3">
               {["최신 스터디", "모집 중 스터디", "진행 중 스터디"].map(
                 (tab) => (
@@ -67,8 +64,8 @@ export default function Home() {
           px-5 py-2 rounded-full text-[14px] font-semibold transition-all
           ${
             activeTab === tab
-              ? "bg-blue-600 text-white shadow-sm" // 선택된 탭: 파란색 배경
-              : "bg-gray-100 text-gray-500 hover:bg-gray-200" // 비활성 탭: 연회색 배경
+              ? "bg-blue-600 text-white shadow-sm"
+              : "bg-gray-100 text-gray-500 hover:bg-gray-200"
           }
         `}
                   >
@@ -78,17 +75,14 @@ export default function Home() {
               )}
             </div>
 
-            {/* 실제 스터디 목록 (선택된 탭 정보를 넘겨줄 수 있습니다) */}
             <StudyListSection
               activeTab={activeTab}
               selectedCategory="전체"
               searchTerm=""
             />
           </div>
-          {/* 스터디 리스트 섹션 */}
         </div>
 
-        {/* 오른쪽 사이드바 영역 */}
         <aside className="w-full md:w-[320px] sticky top-24">
           <StudyProfileCard isLoggedIn={true} />
         </aside>

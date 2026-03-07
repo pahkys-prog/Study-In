@@ -23,7 +23,6 @@ export default function StudyBanner() {
 
   return (
     <div className="group relative w-full overflow-hidden rounded-[12px] shadow-sm bg-gray-100 aspect-[16/9] md:aspect-[3/1]">
-      {/* 슬라이드 영역 */}
       <div
         className="flex h-full transition-transform duration-700 ease-in-out"
         /* eslint-disable-next-line */
@@ -36,7 +35,6 @@ export default function StudyBanner() {
         ))}
       </div>
 
-      {/* 좌측 화살표 */}
       <button
         onClick={prevSlide}
         className="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-white transition-all opacity-0 group-hover:opacity-100"
@@ -57,7 +55,6 @@ export default function StudyBanner() {
         </svg>
       </button>
 
-      {/* 우측 화살표 */}
       <button
         onClick={nextSlide}
         className="absolute right-3 top-1/2 -translate-y-1/2 z-10 text-white transition-all opacity-0 group-hover:opacity-100"
@@ -77,7 +74,7 @@ export default function StudyBanner() {
           <polyline points="2 2 9 8.5 2 15"></polyline>
         </svg>
       </button>
-      {/* 페이지네이션 점 (클릭 시 해당 슬라이드로 이동) */}
+
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
         {banners.map((_, index) => (
           <button
